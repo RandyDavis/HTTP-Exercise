@@ -3,25 +3,35 @@ require 'unirest'
 module Makerblog
   class Client
     def list_posts
-      response = Unirest.get('http://makerblog.herokuapp.com/posts',
-        headers: { "Accept" => "application/json" })
-      posts =response.body
-      posts.each do |post|
-        puts "Name: #{post["name"]}\nTitle: #{post["title"]}\nContent: #{post["content"]}\n\n"
-      end
-      if response.code == 200
-        puts "Passed"
+      begin
+        response = Unirest.get('http://makerblog.herokuapp.com/posts',
+          headers: { "Accept" => "application/json" })
+        posts =response.body
+        posts.each do |post|
+          puts "Name: #{post["name"]}\nTitle: #{post["title"]}\nContent: #{post["content"]}\n\n"
+        end
+        if response.code == 200
+          puts "Passed"
+        end
+      rescue Exception => e
+        puts e.message
+        # puts e.backtrace.inspect
       end
     end
 
     def show_post(id)
-      url = "http://makerblog.herokuapp.com/posts/#{id}"
-      response = Unirest.get(url,
-        headers: { "Accept" => "application/json"})
-      post =response.body
-      puts "Name: #{post["name"]}\nTitle: #{post["title"]}\nContent: #{post["content"]}\n\n"
-      if response.code == 200
-        puts "Passed"
+      begin
+        url = "http://makerblog.herokuapp.com/posts/#{id}"
+        response = Unirest.get(url,
+          headers: { "Accept" => "application/json"})
+        post =response.body
+        puts "Name: #{post["name"]}\nTitle: #{post["title"]}\nContent: #{post["content"]}\n\n"
+        if response.code == 200
+          puts "Passed"
+        end
+      rescue Exception => e
+        puts e.message
+        # puts e.backtrace.inspect
       end
     end
 
@@ -74,7 +84,11 @@ module Makerblog
 end
 
 client = Makerblog::Client.new
-client.delete_post(19037)
+client.list_posts
+client.show_post(5654555)
+client.create_post("James", "Turtle Soup", "Ninja Turtles anybody?")
+client.edit_post(19083)
+client.delete_post(19083)
 
 
 
